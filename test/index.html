@@ -1,0 +1,28 @@
+<html>
+  <head>
+    <title>RenderCanvas</title>
+    <script src="../dist/bundle.js"></script>
+    <script>
+      const { Pipeline, WebGlPipeline, PipelineSteps } = window.RenderCanvas
+
+      const pipeline = new Pipeline({
+        'r': 0,
+        'g': 1,
+        'b': 2,
+        'a': 3
+      }, 8, [
+        new PipelineSteps.Rgba()
+      ])
+
+      const canvas = document.createElement('canvas')
+      const context = canvas.getContext('webgl');
+      
+      const webGlPipeline = new WebGlPipeline(context, pipeline)
+      
+      console.log(webGlPipeline.program)
+    </script>
+  </head>
+  <body>
+
+  </body>
+</html>
