@@ -17,14 +17,19 @@ export default class WebGlRenderer extends Renderer {
     this.gl = create3dContext(this.canvas)
   }
 
-  async render (canvas, pipeline, source) {
+  getWebGlPipeline (pipeline) {
     const { gl } = this
-
     let webGlPipeline = pipelineCache[pipeline.id]
     if (!webGlPipeline) {
       pipelineCache[pipeline.id] = webGlPipeline = new WebGlPipeline(gl, pipeline)
     }
 
+    return webGlPipeline
+  }
+
+  async render (canvas, pipeline, source) {
+    const { gl } = this
+    const webGlPipeline = this.getWebGlPipeline(pipeline)
     const { width, height, maxValue } = this.options
     const { program } = webGlPipeline
 

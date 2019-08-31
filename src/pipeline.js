@@ -1,11 +1,16 @@
 let nextPipelineId = 1
 
 export default class Pipeline {
-  constructor (bands, bits, steps) {
+  constructor (steps, options) {
     this.id = nextPipelineId++
-    this.bands = bands
     this.steps = steps
-    this.bits = bits
-    this.maxValue = Math.pow(2, bits) - 1
+    this.bands = options.bands
+    if (options.bits) {
+      this.bits = options.bits
+      this.luminanceScale = 1 / Math.pow(2, bits) - 1
+    } else if (options.dataType) {
+      this.dataType = options.dataType
+      this.luminanceScale = 1
+    }
   }
 }

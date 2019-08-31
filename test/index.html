@@ -9,19 +9,25 @@
     <script>
       const { Pipeline, WebGlRenderer, PipelineSteps } = window.RenderCanvas
 
-      const pipeline = new Pipeline({
-        'r': 0,
-        'g': 1,
-        'b': 2,
-        'a': 3
-      }, 8, [
+      const pipeline = new Pipeline([
         new PipelineSteps.Rgba()
-      ])
+      ],
+      {
+        bands: {
+          'r': 0,
+          'g': 1,
+          'b': 2,
+          'a': 3
+        },
+        dataType: 'Uint8'
+      })
 
       const renderer = new WebGlRenderer()
       const canvas = document.createElement('canvas')
       canvas.width = canvas.height = 256
       document.body.appendChild(canvas)
+
+      console.log(renderer.getWebGlPipeline(pipeline).fragmentShaderSource)
 
       GeoTIFF.fromUrl('data/ortho.tiff')
       .then(geotiff => renderer.render(canvas, pipeline, {

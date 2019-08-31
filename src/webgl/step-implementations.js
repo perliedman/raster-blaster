@@ -34,7 +34,7 @@ export class Rgba extends WebGlStep {
     return `
       gl_FragColor = vec4(${
         ['r', 'g', 'b', 'a'].map(b => `texture2D(u_textureBand_${b}, v_texCoord)[0]`).join(',')
-      }) / ${pipeline.maxValue.toFixed(1)};
+      }) * ${pipeline.luminanceScale.toFixed(1)};
     `
   }
 }

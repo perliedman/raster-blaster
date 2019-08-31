@@ -1,4 +1,5 @@
 import * as stepImplementations from './step-implementations'
+import { Glob } from 'glob';
 
 export default class WebGlPipeline {
   constructor (gl, pipeline) {
@@ -57,8 +58,8 @@ export default class WebGlPipeline {
           rasterBand.height,
           0,
           gl.LUMINANCE,
-          gl.FLOAT,
-          rasterBand.data ? new Float32Array(rasterBand.data) : null,
+          glType(gl, rasterBand.data),
+          rasterBand.data
         );
       } else {
         throw new Error('Neither texture or rasterBand is set in textureDef.')
@@ -142,5 +143,16 @@ export default class WebGlPipeline {
     gl.linkProgram(program);
 
     this.program = program
+  }
+}
+
+const glType = (gl, arr) => {
+  switch (arr.constructor.name) {
+    case 'Uint8Array':
+      return gl.UNSIGNED_BYTE
+    case 'FloatArray':
+      return gl.FLOAT
+    default:
+      throw new Error('Unhandled data type')
   }
 }
