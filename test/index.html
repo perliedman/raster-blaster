@@ -1,9 +1,13 @@
 <html>
   <head>
     <title>RenderCanvas</title>
+    <script src="../tmp/geotiff.bundle.js"></script>
     <script src="../dist/bundle.js"></script>
+  </head>
+  <body>
+
     <script>
-      const { Pipeline, WebGlPipeline, PipelineSteps } = window.RenderCanvas
+      const { Pipeline, WebGlRenderer, PipelineSteps } = window.RenderCanvas
 
       const pipeline = new Pipeline({
         'r': 0,
@@ -14,15 +18,24 @@
         new PipelineSteps.Rgba()
       ])
 
+      const renderer = new WebGlRenderer()
       const canvas = document.createElement('canvas')
-      const context = canvas.getContext('webgl');
-      
-      const webGlPipeline = new WebGlPipeline(context, pipeline)
-      
-      console.log(webGlPipeline.program)
-    </script>
-  </head>
-  <body>
+      canvas.width = canvas.height = 256
+      document.body.appendChild(canvas)
 
+      GeoTIFF.fromUrl('data/ortho.tiff')
+      .then(geotiff => renderer.render(canvas, pipeline, {
+        getRasters: () => geotiff.readRasters({
+          bbox: [12.33627319335938, 57.3076113711779, 12.336959838867195, 57.307982246133975],
+          width: 256,
+          height: 256
+        })
+        .then(rasters => rasters.map(r => ({
+          data: r,
+          width: 256,
+          height: 256
+        })))
+      }))
+    </script>
   </body>
 </html>

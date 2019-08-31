@@ -6,7 +6,8 @@
   "main": "src/index.js",
   "scripts": {
     "test": "ava",
-    "build": "rollup -c"
+    "build": "rollup -c",
+    "watch": "rollup -cw"
   },
   "keywords": [],
   "author": "",
