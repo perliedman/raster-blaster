@@ -1,6 +1,7 @@
-import Renderer from "..";
+import Renderer from "../renderer";
+import WebGlPipeline from './webgl-pipeline'
 
-pipelineCache = {}
+const pipelineCache = {}
 
 export default class WebGlRenderer extends Renderer {
   static isSupported() {
@@ -13,7 +14,7 @@ export default class WebGlRenderer extends Renderer {
     this.canvas = document.createElement('canvas')
     this.canvas.width = this.options.width
     this.canvas.height = this.options.height
-    this.gl = create3dContext(canvas)
+    this.gl = create3dContext(this.canvas)
   }
 
   async render (canvas, pipeline, source) {
@@ -66,11 +67,14 @@ export default class WebGlRenderer extends Renderer {
     gl.vertexAttribPointer(positionLocation, 2, gl.FLOAT, false, 0, 0);
     setRectangle(gl, 0, 0, width, height);
 
-    webGlPipeline.bindTextures()
-    webGlPipeline.bindUniforms()
+    webGlPipeline.bindTextures(gl, program, await source.getRasters())
+    webGlPipeline.bindUniforms(gl, program)
 
     gl.viewport(0, 0, width, height);
     gl.drawArrays(gl.TRIANGLES, 0, 6);
+
+    const ctx = canvas.getContext('2d');
+    ctx.drawImage(this.canvas, 0, 0);
   }
 }
 
@@ -90,4 +94,18 @@ function create3dContext(canvas) {
   }
 
   return context;
+}
+
+function setRectangle(gl, x, y, width, height) {
+  const x1 = x;
+  const x2 = x + width;
+  const y1 = y;
+  const y2 = y + height;
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([
+    x1, y1,
+    x2, y1,
+    x1, y2,
+    x1, y2,
+    x2, y1,
+    x2, y2]), gl.STATIC_DRAW);
 }

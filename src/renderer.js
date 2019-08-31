@@ -1,4 +1,4 @@
-defaultOptions = {
+const defaultOptions = {
   width: 256,
   height: 256
 }
