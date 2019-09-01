@@ -10,7 +10,9 @@
       const { Pipeline, WebGlRenderer, PipelineSteps } = window.RenderCanvas
 
       const pipeline = new Pipeline([
-        new PipelineSteps.Rgba()
+        new PipelineSteps.Index('$r+$g-$b'),
+        new PipelineSteps.GrayScale(),
+        new PipelineSteps.BandsToChannels({ a: 'a' })
       ],
       {
         bands: {

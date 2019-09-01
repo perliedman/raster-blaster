@@ -112,7 +112,13 @@ export default class WebGlPipeline {
     // TODO: Steps' functions should go here
 
     void main() {
-      ${this.steps.map(s => s.main(this.pipeline)).join('\n')}
+      ${this.steps.map(s => s.main(this.pipeline) +
+        ['r', 'g', 'b', 'a']
+          .map(c => [c, s.mapChannel(c)])
+          .filter(c => c[1])
+          .map(c => `gl_FragColor.${c[0]} = ${c[1]};`)
+          .join('\n'))
+        .join('\n')}
 
       // TODO: just passing alpha in gl_FragColor does not work
       if (gl_FragColor.a == 0.0) {

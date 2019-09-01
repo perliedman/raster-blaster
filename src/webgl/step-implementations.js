@@ -25,22 +25,35 @@ class WebGlStep {
   }
 }
 
-export class Rgba extends WebGlStep {
-  constructor (prefix, step) {
-    super(prefix, step)
-  }
-
+export class BandsToChannels extends WebGlStep {
   main (pipeline) {
+    return Object.keys(this.step.mapping)
+      .map(b => `gl_FragColor.${b} = texture2D(u_textureBand_${this.step.mapping[b]}, v_texCoord)[0] * ${pipeline.luminanceScale.toFixed(1)};`)
+      .join(',')
+  }
+}
+
+export class Index extends WebGlStep {
+  main (pipeline) {
+    const bandVariable = b => `${this.prefix}${b}`
+
+    const regex = RegExp('\\$(\\w+)', 'g')
+    let bands = []
+    let match
+
+    while ((match = regex.exec(this.step.formula)) !== null) {
+      bands.push(match[1])
+    }
+
     return `
-      gl_FragColor = vec4(${
-        ['r', 'g', 'b', 'a'].map(b => `texture2D(u_textureBand_${b}, v_texCoord)[0]`).join(',')
-      }) * ${pipeline.luminanceScale.toFixed(1)};
+      ${bands.map(m => `float ${bandVariable(m)} = texture2D(u_textureBand_${m}, v_texCoord)[0];`).join('\n')}
+      float index = ${this.step.formula.replace(regex, (str, band) => bandVariable(band))};
     `
   }
 }
 
 export class GrayScale extends WebGlStep {
-  constructor (prefix, step) {
-    super(prefix, step)
+  mapChannel (c) {
+    return c !== 'a' ? 'index' : ''
   }
 }
