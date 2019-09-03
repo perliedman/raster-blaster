@@ -16,6 +16,8 @@ class WebGlStep {
     return []
   }
 
+  async bindTexture (textureDef, gl) {}
+
   main (pipeline) {
     return ''
   }
@@ -34,7 +36,7 @@ export class BandsToChannels extends WebGlStep {
 }
 
 export class Index extends WebGlStep {
-  main (pipeline) {
+  main () {
     const bandVariable = b => `${this.prefix}${b}`
 
     const regex = RegExp('\\$(\\w+)', 'g')
@@ -45,15 +47,38 @@ export class Index extends WebGlStep {
       bands.push(match[1])
     }
 
+    const vName = `${this.prefix}index`
+
     return `
       ${bands.map(m => `float ${bandVariable(m)} = texture2D(u_textureBand_${m}, v_texCoord)[0];`).join('\n')}
-      float index = ${this.step.formula.replace(regex, (str, band) => bandVariable(band))};
+      float ${vName} = ${this.step.formula.replace(regex, (str, band) => bandVariable(band))};
+      gl_FragColor = vec4(${vName}, ${vName}, ${vName}, ${vName});
     `
   }
 }
 
-export class GrayScale extends WebGlStep {
-  mapChannel (c) {
-    return c !== 'a' ? 'index' : ''
+export class LinearContrast extends WebGlStep {
+  getUniforms() {
+    return [
+      { name: `u_${this.prefix}low`, type: 'vec4' },
+      { name: `u_${this.prefix}high`, type: 'vec4' }
+    ]
+  }
+
+  bindUniforms(gl, program) {
+    const { low, high } = this.step
+
+    gl.uniform4f(
+      gl.getUniformLocation(program, `u_${this.prefix}low`),
+      low, low, low, low
+    );
+    gl.uniform4f(
+      gl.getUniformLocation(program, `u_${this.prefix}high`),
+      high, high, high, high
+    );
+  }
+
+  main () {
+    return `gl_FragColor = smoothstep(u_${this.prefix}low, u_${this.prefix}high, gl_FragColor);`
   }
 }

@@ -11,7 +11,7 @@
 
       const pipeline = new Pipeline([
         new PipelineSteps.Index('$r+$g-$b'),
-        new PipelineSteps.GrayScale(),
+        new PipelineSteps.LinearContrast(0.2, 0.8),
         new PipelineSteps.BandsToChannels({ a: 'a' })
       ],
       {
