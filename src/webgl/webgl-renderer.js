@@ -17,11 +17,12 @@ export default class WebGlRenderer extends Renderer {
     this.gl = create3dContext(this.canvas)
   }
 
-  getWebGlPipeline (pipeline) {
+  async getWebGlPipeline (pipeline) {
     const { gl } = this
     let webGlPipeline = pipelineCache[pipeline.id]
     if (!webGlPipeline) {
       pipelineCache[pipeline.id] = webGlPipeline = new WebGlPipeline(gl, pipeline)
+      await webGlPipeline.bindTextures(gl)
     }
 
     return webGlPipeline
@@ -29,7 +30,7 @@ export default class WebGlRenderer extends Renderer {
 
   async render (canvas, pipeline, source) {
     const { gl } = this
-    const webGlPipeline = this.getWebGlPipeline(pipeline)
+    const webGlPipeline = await this.getWebGlPipeline(pipeline)
     const { width, height, maxValue } = this.options
     const { program } = webGlPipeline
 
@@ -72,7 +73,7 @@ export default class WebGlRenderer extends Renderer {
     gl.vertexAttribPointer(positionLocation, 2, gl.FLOAT, false, 0, 0);
     setRectangle(gl, 0, 0, width, height);
 
-    webGlPipeline.bindTextures(gl, program, await source.getRasters())
+    webGlPipeline.bindRasterTextures(gl, program, await source.getRasters())
     webGlPipeline.bindUniforms(gl, program)
 
     gl.viewport(0, 0, width, height);

@@ -26,3 +26,11 @@ export class LinearContrast {
     this.high = high
   }
 }
+
+export class ColorMap {
+  static name () { return 'ColorMap' }
+
+  constructor (type) {
+    this.type = type
+  }
+}

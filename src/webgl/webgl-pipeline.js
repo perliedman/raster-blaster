@@ -41,14 +41,23 @@ export default class WebGlPipeline {
     }
   }
 
-  bindTextures (gl, program, rasters) {
+  async bindTextures(gl) {
+    const { program } = this;
+    for (let i = 0; i < this.textureDefs.length; i++) {
+      const textureDef = this.textureDefs[i]
+      if (textureDef.rasterBand == null) {
+        gl.activeTexture(gl.TEXTURE0 + i);
+        textureDef.texture = await textureDef.init(gl, program)
+      }
+    }
+  }
+
+  bindRasterTextures (gl, program, rasters) {
     for (let i = 0; i < this.textureDefs.length; i++) {
       const textureDef = this.textureDefs[i]
       gl.uniform1i(gl.getUniformLocation(program, textureDef.name), i);
       gl.activeTexture(gl.TEXTURE0 + i);
-      if (textureDef.texture) {
-        gl.bindTexture(gl.TEXTURE_2D, textureDef.texture);
-      } else if (textureDef.rasterBand != null) {
+      if (textureDef.rasterBand != null) {
         const rasterBand = rasters[textureDef.rasterBand]
         gl.texImage2D(
           gl.TEXTURE_2D,
@@ -62,7 +71,7 @@ export default class WebGlPipeline {
           rasterBand.data
         );
       } else {
-        throw new Error('Neither texture or rasterBand is set in textureDef.')
+        gl.bindTexture(gl.TEXTURE_2D, textureDef.texture);
       }
     }
   }

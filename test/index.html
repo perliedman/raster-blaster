@@ -11,7 +11,8 @@
 
       const pipeline = new Pipeline([
         new PipelineSteps.Index('$r+$g-$b'),
-        new PipelineSteps.LinearContrast(0.2, 0.8),
+        new PipelineSteps.LinearContrast(0.4, 1.0),
+        new PipelineSteps.ColorMap('RdYlGn'),
         new PipelineSteps.BandsToChannels({ a: 'a' })
       ],
       {
@@ -29,7 +30,8 @@
       canvas.width = canvas.height = 256
       document.body.appendChild(canvas)
 
-      console.log(renderer.getWebGlPipeline(pipeline).fragmentShaderSource)
+      renderer.getWebGlPipeline(pipeline)
+      .then(pipeline => console.log(pipeline.fragmentShaderSource))
 
       GeoTIFF.fromUrl('data/ortho.tiff')
       .then(geotiff => renderer.render(canvas, pipeline, {

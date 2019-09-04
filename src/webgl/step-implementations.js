@@ -1,3 +1,5 @@
+import {colormaps, colorMapsTextureImage} from './colormaps'
+
 class WebGlStep {
   constructor (prefix, step) {
     this.prefix = prefix
@@ -80,5 +82,50 @@ export class LinearContrast extends WebGlStep {
 
   main () {
     return `gl_FragColor = smoothstep(u_${this.prefix}low, u_${this.prefix}high, gl_FragColor);`
+  }
+}
+
+export class ColorMap extends WebGlStep {
+  getUniforms () {
+    return [
+      { name: `u_${this.prefix}texCoordY`, type: 'float' }
+    ]
+  }
+
+  bindUniforms (gl, program) {
+    gl.uniform1f(
+      gl.getUniformLocation(program, `u_${this.prefix}texCoordY`),
+      (colormaps[this.step.type]) / 70
+    );
+  }
+
+  getTextures () {
+    return [
+      { name: `u_${this.prefix}colormap_texture`, init: this.bindTexture.bind(this) }
+    ]
+  }
+
+  bindTexture (gl) {
+    return new Promise((resolve, reject) => {
+      const img = new Image();
+      img.onload = () => {
+        const texture = this.texture = gl.createTexture();
+        gl.bindTexture(gl.TEXTURE_2D, texture);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+        
+        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, img);
+        resolve(texture)
+      }
+      img.onerror = reject
+
+      img.src = colorMapsTextureImage
+    })
+  }
+
+  main () {
+    return `gl_FragColor = texture2D(u_${this.prefix}colormap_texture, vec2(gl_FragColor.r, u_${this.prefix}texCoordY));`
   }
 }
