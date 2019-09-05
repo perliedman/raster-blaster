@@ -2,7 +2,9 @@
 
 Blast rasters to a canvas with speed and style.
 
-Given multi-band raster data, for example satellite imagery, this module renders them to a canvas, allowing arbitrary mappings of raster bands to canvas color channels. This makes it easy and fast to make contrast adjustments, calculate vegetation index and many other common operations.
+Given multi-band raster data, for example satellite imagery, this module renders them to a canvas, allowing arbitrary mappings of raster bands to canvas color channels. This makes it easy and fast to make contrast adjustments, calculate vegetation index like NDVI and many other common operations.
+
+[Tiny example of Raster Blaster in action](https://www.liedman.net/raster-blaster/)
 
 Under the hood, uses WebGL when available for high performance, falling back to standard canvas operations if needed.
 
