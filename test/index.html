@@ -5,13 +5,21 @@
     <script src="../dist/bundle.js"></script>
   </head>
   <body>
-
+    <div>
+      Contrast low
+      <input id="contrast-low" type="range" min="0" max="1" step="0.01" value="0" />
+    </div>
+    <div>
+      Contrast high
+      <input id="contrast-high" type="range" min="0" max="1" step="0.01" value="1" />
+    </div>
     <script>
       const { Pipeline, WebGlRenderer, PipelineSteps } = window.RenderCanvas
 
+      const contrastStep = new PipelineSteps.LinearContrast(0.0, 1.0)
       const pipeline = new Pipeline([
         new PipelineSteps.Index('$r+$g-$b'),
-        new PipelineSteps.LinearContrast(0.4, 1.0),
+        contrastStep,
         new PipelineSteps.ColorMap('RdYlGn'),
         new PipelineSteps.BandsToChannels({ a: 'a' })
       ],
@@ -33,19 +41,32 @@
       renderer.getWebGlPipeline(pipeline)
       .then(pipeline => console.log(pipeline.fragmentShaderSource))
 
-      GeoTIFF.fromUrl('data/ortho.tiff')
-      .then(geotiff => renderer.render(canvas, pipeline, {
-        getRasters: () => geotiff.readRasters({
-          bbox: [12.33627319335938, 57.3076113711779, 12.336959838867195, 57.307982246133975],
-          width: 256,
-          height: 256
-        })
-        .then(rasters => rasters.map(r => ({
-          data: r,
-          width: 256,
-          height: 256
-        })))
-      }))
+      const rasterPromise = GeoTIFF.fromUrl('data/ortho.tiff')
+      .then(geotiff => geotiff.readRasters({
+        bbox: [12.33627319335938, 57.3076113711779, 12.336959838867195, 57.307982246133975],
+        width: 256,
+        height: 256
+      })
+      .then(rasters => rasters.map(r => ({
+        data: r,
+        width: 256,
+        height: 256
+      }))))
+
+      const render = () => renderer.render(canvas, pipeline, {
+        getRasters: () => rasterPromise
+      })
+
+      render()
+
+      document.getElementById('contrast-low').oninput = e => {
+        contrastStep.low = Number(e.target.value)
+        render()
+      }
+      document.getElementById('contrast-high').oninput = e => {
+        contrastStep.high = Number(e.target.value)
+        render()
+      }
     </script>
   </body>
 </html>
