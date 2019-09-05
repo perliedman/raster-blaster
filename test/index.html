@@ -14,7 +14,7 @@
       <input id="contrast-high" type="range" min="0" max="1" step="0.01" value="1" />
     </div>
     <script>
-      const { Pipeline, WebGlRenderer, PipelineSteps } = window.RenderCanvas
+      const { Pipeline, WebGlRenderer, PipelineSteps } = window.RasterBlaster
 
       const contrastStep = new PipelineSteps.LinearContrast(0.0, 1.0)
       const pipeline = new Pipeline([

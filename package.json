@@ -1,19 +1,18 @@
 {
   "name": "render-canvas",
   "version": "1.0.0",
-  "description": "",
+  "description": "Blast multi-band rasters to a canvas with speed and style.",
   "type": "module",
   "main": "src/index.js",
   "scripts": {
-    "test": "ava",
     "build": "rollup -c",
     "watch": "rollup -cw"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": ["raster", "webgl", "satellite", "geotiff", "canvas"],
+  "author": "Per Liedman <per@liedman.net>",
   "license": "ISC",
+  "homepage": "https://github.com/perliedman/raster-blaster",
   "devDependencies": {
-    "ava": "^2.3.0",
     "eslint": "^6.3.0",
     "eslint-config-standard": "^14.1.0",
     "eslint-plugin-import": "^2.18.2",
