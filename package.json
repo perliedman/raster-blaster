@@ -1,5 +1,5 @@
 {
-  "name": "render-canvas",
+  "name": "raster-blaster",
   "version": "1.0.0",
   "description": "Blast multi-band rasters to a canvas with speed and style.",
   "type": "module",
