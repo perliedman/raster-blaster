@@ -21,7 +21,7 @@
         new PipelineSteps.Index('$r+$g-$b'),
         contrastStep,
         new PipelineSteps.ColorMap('RdYlGn'),
-        new PipelineSteps.BandsToChannels({ a: 'a' })
+        new PipelineSteps.BandsToChannels('a')
       ],
       {
         bands: 'rgba',

@@ -32,7 +32,7 @@ class WebGlStep {
 export class BandsToChannels extends WebGlStep {
   main (pipeline) {
     return Object.keys(this.step.mapping)
-      .map(b => `gl_FragColor.${b} = texture2D(u_textureBand_${this.step.mapping[b]}, v_texCoord)[0] * ${pipeline.luminanceScale.toFixed(1)};`)
+      .map(b => `gl_FragColor.${this.step.mapping[b]} = texture2D(u_textureBand_${b}, v_texCoord)[0] * ${pipeline.luminanceScale.toFixed(1)};`)
       .join('\n')
   }
 }

@@ -2,7 +2,14 @@ export class BandsToChannels {
   static name () { return 'BandsToChannels' }
 
   constructor (mapping) {
-    this.mapping = mapping
+    if (typeof mapping === 'string' || mapping instanceof String) {
+      this.mapping = Array.from(mapping).reduce((a, b) => {
+        a[b] = b
+        return a
+      }, {})
+    } else {
+      this.mapping = mapping
+    }
   }
 }
 
