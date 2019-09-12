@@ -34,7 +34,7 @@ export default class WebGlRenderer extends Renderer {
     const { width, height, maxValue } = this.options
     const { program } = webGlPipeline
 
-    gl.clear(this.gl.DEPTH_BUFFER_BIT | this.gl.COLOR_BUFFER_BIT);
+    gl.clear(gl.DEPTH_BUFFER_BIT | gl.COLOR_BUFFER_BIT);
     gl.useProgram(program)
     gl.viewport(0, 0, width, height)
 
