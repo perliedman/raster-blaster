@@ -23,12 +23,7 @@ const pipeline = new Pipeline([
 ],
 {
   // Map (arbitrary) band names to their indices
-  bands: {
-    'r': 0,
-    'g': 1,
-    'b': 2,
-    'a': 3
-  },
+  bands: 'rgba',
   dataType: 'Uint8'
 })
 
