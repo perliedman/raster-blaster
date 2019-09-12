@@ -8,7 +8,13 @@
     "build": "rollup -c",
     "watch": "rollup -cw"
   },
-  "keywords": ["raster", "webgl", "satellite", "geotiff", "canvas"],
+  "keywords": [
+    "raster",
+    "webgl",
+    "satellite",
+    "geotiff",
+    "canvas"
+  ],
   "author": "Per Liedman <per@liedman.net>",
   "license": "ISC",
   "homepage": "https://github.com/perliedman/raster-blaster",
