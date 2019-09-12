@@ -1,5 +1,4 @@
 import * as stepImplementations from './step-implementations'
-import { Glob } from 'glob';
 
 export default class WebGlPipeline {
   constructor (gl, pipeline) {
@@ -128,13 +127,6 @@ export default class WebGlPipeline {
           .map(c => `gl_FragColor.${c[0]} = ${c[1]};`)
           .join('\n'))
         .join('\n')}
-
-      // TODO: just passing alpha in gl_FragColor does not work
-      if (gl_FragColor.a == 0.0) {
-        discard;
-      } else {
-        gl_FragColor.a = 1.0;
-      }
     }
     `
 
