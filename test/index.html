@@ -7,18 +7,18 @@
   <body>
     <div>
       Contrast low
-      <input id="contrast-low" type="range" min="0" max="1" step="0.01" value="0" />
+      <input id="contrast-low" type="range" min="-0.5" max="0.5" step="0.01" value="-0.2" />
     </div>
     <div>
       Contrast high
-      <input id="contrast-high" type="range" min="0" max="1" step="0.01" value="1" />
+      <input id="contrast-high" type="range" min="-0.5" max="0.5" step="0.01" value="0.2" />
     </div>
     <script>
       const { Pipeline, WebGlRenderer, PipelineSteps } = window.RasterBlaster
 
-      const contrastStep = new PipelineSteps.SmoothstepContrast(0.0, 1.0)
+      const contrastStep = new PipelineSteps.SmoothstepContrast(-0.2, 0.2)
       const pipeline = new Pipeline([
-        new PipelineSteps.GrayScale('$r+$g-$b'),
+        new PipelineSteps.GrayScale('($g - $r) / ($g + $r - $b)'),
         contrastStep,
         new PipelineSteps.ColorMap('RdYlGn'),
         new PipelineSteps.BandsToChannels('a')

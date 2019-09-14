@@ -42,17 +42,17 @@ export class GrayScale extends WebGlStep {
     const bandVariable = b => `${this.prefix}${b}`
 
     const regex = RegExp('\\$(\\w+)', 'g')
-    let bands = []
+    let bands = new Set()
     let match
 
     while ((match = regex.exec(this.step.formula)) !== null) {
-      bands.push(match[1])
+      bands.add(match[1])
     }
 
     const vName = `${this.prefix}index`
 
     return `
-      ${bands.map(m => `float ${bandVariable(m)} = texture2D(u_textureBand_${m}, v_texCoord)[0];`).join('\n')}
+      ${Array.from(bands).map(m => `float ${bandVariable(m)} = texture2D(u_textureBand_${m}, v_texCoord)[0];`).join('\n')}
       float ${vName} = ${this.step.formula.replace(regex, (str, band) => bandVariable(band))};
       gl_FragColor = vec4(${vName}, ${vName}, ${vName}, ${vName});
     `
