@@ -15,10 +15,18 @@ _Note_ Work in progress or rather proof of concept, probably not suitable for pr
 ```js
 import { Pipeline, WebGlRenderer, PipelineSteps } from 'RasterBlaster'
 
+// A pipeline is a series of functions that are applied to
+// the raster data before it is rendered to the canvas
 const pipeline = new Pipeline([
-  new PipelineSteps.Index('$r+$g-$b'),
-  new PipelineSteps.LinearContrast(0.0, 1.0),
+  // Convert bands to grayscale using a formula;
+  // $r is the incoming "r" band
+  new PipelineSteps.GrayScale('$r+$g-$b'),
+  // Apply smoothstep to each channel (r, g, b, a)
+  new PipelineSteps.SmoothstepContrast(0.2, 0.8),
+  // Take the first channel and map its value to rgb values
+  // using a named colormap
   new PipelineSteps.ColorMap('RdYlGn'),
+  // Set one or more channels directly from raster bands
   new PipelineSteps.BandsToChannels({ a: 'a' })
 ],
 {
@@ -27,12 +35,16 @@ const pipeline = new Pipeline([
   dataType: 'Uint8'
 })
 
+// A renderer can render raster data to a canvas using a pipeline
+// By default, the renderer renders to a 256x256 pixel canvas
 const renderer = new WebGlRenderer()
 const canvas = document.createElement('canvas')
 canvas.width = canvas.height = 256
 document.body.appendChild(canvas)
 
-renderer.render(canvas, pipeline, {
-  getRasters: () => // Function that returns a promise that resolves to an array of typed arrays, one for each band
+renderer.render(
+  canvas,
+  pipeline, 
+  /* Function that returns a promise that resolves to an array of typed arrays, one for each band */
 })
 ```

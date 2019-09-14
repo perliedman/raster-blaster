@@ -16,9 +16,9 @@
     <script>
       const { Pipeline, WebGlRenderer, PipelineSteps } = window.RasterBlaster
 
-      const contrastStep = new PipelineSteps.LinearContrast(0.0, 1.0)
+      const contrastStep = new PipelineSteps.SmoothstepContrast(0.0, 1.0)
       const pipeline = new Pipeline([
-        new PipelineSteps.Index('$r+$g-$b'),
+        new PipelineSteps.GrayScale('$r+$g-$b'),
         contrastStep,
         new PipelineSteps.ColorMap('RdYlGn'),
         new PipelineSteps.BandsToChannels('a')

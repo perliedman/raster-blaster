@@ -13,20 +13,16 @@ export class BandsToChannels {
   }
 }
 
-export class Index {
-  static name () { return 'Index' }
+export class GrayScale {
+  static name () { return 'GrayScale' }
 
   constructor (formula) {
     this.formula = formula
   }
 }
 
-export class GrayScale {
-  static name () { return 'GrayScale' }
-}
-
-export class LinearContrast {
-  static name () { return 'LinearContrast' }
+export class SmoothstepContrast {
+  static name () { return 'SmoothstepContrast' }
 
   constructor (low, high) {
     this.low = low

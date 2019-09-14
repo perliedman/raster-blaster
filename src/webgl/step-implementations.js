@@ -37,7 +37,7 @@ export class BandsToChannels extends WebGlStep {
   }
 }
 
-export class Index extends WebGlStep {
+export class GrayScale extends WebGlStep {
   main () {
     const bandVariable = b => `${this.prefix}${b}`
 
@@ -59,7 +59,7 @@ export class Index extends WebGlStep {
   }
 }
 
-export class LinearContrast extends WebGlStep {
+export class SmoothstepContrast extends WebGlStep {
   getUniforms() {
     return [
       { name: `u_${this.prefix}low`, type: 'vec4' },
