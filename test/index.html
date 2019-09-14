@@ -48,9 +48,7 @@
         height: 256
       }))))
 
-      const render = () => renderer.render(canvas, pipeline, {
-        getRasters: () => rasterPromise
-      })
+      const render = () => renderer.render(canvas, pipeline, () => rasterPromise)
 
       render()
 

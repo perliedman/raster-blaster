@@ -73,7 +73,7 @@ export default class WebGlRenderer extends Renderer {
     gl.vertexAttribPointer(positionLocation, 2, gl.FLOAT, false, 0, 0);
     setRectangle(gl, 0, 0, width, height);
 
-    webGlPipeline.bindRasterTextures(gl, program, await source.getRasters())
+    webGlPipeline.bindRasterTextures(gl, program, await source())
     webGlPipeline.bindUniforms(gl, program)
 
     gl.viewport(0, 0, width, height);
