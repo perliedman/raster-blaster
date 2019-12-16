@@ -1,6 +1,6 @@
 {
   "name": "raster-blaster",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description": "Blast multi-band rasters to a canvas with speed and style.",
   "type": "module",
   "main": "src/index.js",
