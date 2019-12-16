@@ -33,6 +33,7 @@ export default class WebGlRenderer extends Renderer {
     const webGlPipeline = await this.getWebGlPipeline(pipeline)
     const { width, height, maxValue } = this.options
     const { program } = webGlPipeline
+    const rasterData = await source()
 
     gl.clear(gl.DEPTH_BUFFER_BIT | gl.COLOR_BUFFER_BIT);
     gl.useProgram(program)
@@ -73,7 +74,7 @@ export default class WebGlRenderer extends Renderer {
     gl.vertexAttribPointer(positionLocation, 2, gl.FLOAT, false, 0, 0);
     setRectangle(gl, 0, 0, width, height);
 
-    webGlPipeline.bindRasterTextures(gl, program, await source())
+    webGlPipeline.bindRasterTextures(gl, program, rasterData)
     webGlPipeline.bindUniforms(gl, program)
 
     gl.viewport(0, 0, width, height);
