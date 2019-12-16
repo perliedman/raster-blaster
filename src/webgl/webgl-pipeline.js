@@ -9,6 +9,10 @@ export default class WebGlPipeline {
       return new clss(`${typeName}_${i}_`, s)
     })
 
+    gl.blendFunc(gl.SRC_ALPHA, gl.ONE);
+    gl.enable(gl.BLEND);
+    gl.disable(gl.DEPTH_TEST);
+
     this.textureDefs = Object.keys(pipeline.bands)
     .map(b => ({
       name: `u_textureBand_${b}`,
